@@ -10,7 +10,7 @@ Built with FastAPI, TensorFlow, OpenCV, and Supabase — designed as a full-stac
 
 EmotionVision detects human emotions in real time from webcam or RTSP camera feeds. It identifies 7 emotions — **angry, disgust, fear, happy, sad, surprise, neutral** — draws bounding boxes on faces, and saves screenshots to cloud storage on demand.
 
-![EmotionVision Dashboard](docs/manual_mainGate1_20260317_015335_376.png)
+![EmotionVision Dashboard](docs/manual_mainGate1_20260317_015335_376.jpg)
 
 ---
 
@@ -221,7 +221,7 @@ The API is deployed on [Render](https://render.com) (free tier).
 
 | Dashboard | Live Detection | Screenshot Gallery |
 |-----------|---------------|-------------------|
-| ![Dashboard](docs/manual_mainGate1_20260317_014644_166.png) | ![Detection](docs/manual_mainGate1_20260317_014651_188.png) | ![Gallery](docs/manual_mainGate1_20260317_015319_022.png) |
+| ![Dashboard](docs/manual_mainGate1_20260317_014644_166.jpg) | ![Detection](docs/manual_mainGate1_20260317_014651_188.jpg) | ![Gallery](docs/manual_mainGate1_20260317_015319_022.jpg) |
 
 ---
 
