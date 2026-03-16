@@ -54,3 +54,6 @@ def health_check():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host=Config.HOST, port=Config.PORT)
+
+from fastapi.staticfiles import StaticFiles
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
