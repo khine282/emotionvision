@@ -18,7 +18,7 @@ class Config:
 
     # Screenshot settings
     SCREENSHOT_BUCKET = "screenshots"
-    AUTO_SCREENSHOT = True
+    AUTO_SCREENSHOT = False
     SCREENSHOT_CONFIDENCE_THRESHOLD = 0.75
     MIN_SCREENSHOT_INTERVAL = 10.0
 
