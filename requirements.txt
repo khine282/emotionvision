@@ -5,7 +5,7 @@ python-dotenv
 opencv-python-headless
 numpy
 mediapipe
-tensorflow==2.13.0
+tflite-runtime
 pymysql
 pillow
 python-multipart
