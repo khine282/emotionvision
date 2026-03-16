@@ -231,7 +231,7 @@ The API is deployed on [Render](https://render.com) (free tier).
 Junior AI Developer Intern @ Reachfield IT Solutions
 
 - 🐙 GitHub: [@khine282](https://github.com/khine282)
-- 💼 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
+- 💼 LinkedIn: [linkedin.com/in/Kai](https://www.linkedin.com/in/khine-zar-thwe-282kzt/)
 
 ---
 
