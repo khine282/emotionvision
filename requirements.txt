@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+supabase
+python-dotenv
+opencv-python-headless
+numpy
+mediapipe
+tensorflow
+pymysql
+pillow
+python-multipart

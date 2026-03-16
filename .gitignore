@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.h5
+*.log
+output_*/
+screenshots/
+trained_models/
+datasets/
