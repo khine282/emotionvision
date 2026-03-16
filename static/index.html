@@ -105,6 +105,70 @@
     z-index: 1;
   }
 
+  /* ── SCREENSHOT NOTIFICATION ── */
+  #screenshot-notif {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: var(--panel);
+    border: 1px solid var(--accent2);
+    border-radius: 4px;
+    padding: 20px;
+    z-index: 9997;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    text-align: center;
+    min-width: 280px;
+    box-shadow: 0 0 40px rgba(0, 255, 136, 0.2);
+  }
+
+  #screenshot-notif.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: all;
+  }
+
+  #screenshot-notif-img {
+    width: 240px;
+    height: 240px;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    display: block;
+    margin: 0 auto 12px;
+    background: var(--bg);
+  }
+
+  .notif-title {
+    font-family: var(--font-display);
+    font-size: 12px;
+    color: var(--accent2);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .notif-meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  #screenshot-notif-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9996;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  #screenshot-notif-overlay.show {
+    opacity: 1;
+  }
+
   @keyframes blink {
     0%, 90%, 100% { transform: scaleY(1); }
     95% { transform: scaleY(0.1); }
@@ -343,7 +407,7 @@
 
   .camera-thumb {
     width: 100%;
-    height: 160px;
+    height: 400px;
     background: var(--bg);
     display: flex;
     align-items: center;
@@ -784,13 +848,30 @@
 
 </main>
 
+<!-- Screenshot notification overlay -->
+<div id="screenshot-notif-overlay"></div>
+
+<!-- Screenshot notification -->
+<div id="screenshot-notif">
+  <div class="notif-title">📸 SCREENSHOT CAPTURED</div>
+  <img id="screenshot-notif-img" src="" alt="screenshot">
+  <div class="notif-meta" id="notif-meta">Saved to Supabase Storage</div>
+  <button class="btn btn-success btn-sm" style="margin-top:10px; width:100%" 
+          onclick="document.getElementById('screenshot-notif').classList.remove('show'); document.getElementById('screenshot-notif-overlay').classList.remove('show')">
+    ✓ Dismiss
+  </button>
+</div>
+
 <!-- TOAST -->
 <div id="toast"></div>
 
 <script>
   // ── CONFIG ──
-//   const API = 'https://emotionvision-api.onrender.com';
-  const API = 'http://localhost:8000';
+  // const API = 'https://emotionvision-api.onrender.com';
+  // const API = 'http://localhost:8000';
+  const API = window.location.hostname === 'localhost' 
+  ? 'http://localhost:8000'
+  : 'https://emotionvision-api.onrender.com';
   document.getElementById('apiDisplay').textContent = 'API: ' + API.replace('https://', '');
 
   let selectedCameraId = null;
@@ -814,6 +895,14 @@
     t.textContent = msg;
     t.className = `show ${type}`;
     setTimeout(() => t.className = '', 3000);
+  }
+
+  function showScreenshotNotif(url) {
+    const notif = document.getElementById('screenshot-notif');
+    const img = document.getElementById('screenshot-notif-img');
+    if (url) img.src = url;
+    notif.classList.add('show');
+    setTimeout(() => notif.classList.remove('show'), 4000);
   }
 
   // ── LOAD CAMERAS ──
@@ -921,14 +1010,37 @@
     } catch (e) { toast('API error', 'error'); }
   }
 
-  async function screenshotCamera(id) {
+ async function screenshotCamera(id) {
     try {
       const res = await fetch(`${API}/api/detector/cameras/${id}/screenshot`, { method: 'POST' });
-      if (res.ok) { toast('Screenshot saved!', 'success'); }
-      else { const d = await res.json(); toast(d.detail || 'Failed', 'error'); }
-    } catch (e) { toast('API error', 'error'); }
+      const data = await res.json();
+      if (res.ok) {
+        toast('Screenshot saved!', 'success');
+        // Show big notification
+        const overlay = document.getElementById('screenshot-notif-overlay');
+        const meta = document.getElementById('notif-meta');
+        meta.textContent = data.data?.filename || 'Saved to Supabase Storage';
+        // Try to get the public URL from latest screenshot
+        try {
+          const ssRes = await fetch(`${API}/api/detector/screenshots?camera_id=${id}&limit=1`);
+          const ssData = await ssRes.json();
+          if (ssData.screenshots?.length > 0 && ssData.screenshots[0].public_url) {
+            showScreenshotNotif(ssData.screenshots[0].public_url);
+          } else {
+            showScreenshotNotif(null);
+          }
+        } catch {
+          showScreenshotNotif(null);
+        }
+        overlay.classList.add('show');
+        setTimeout(() => overlay.classList.remove('show'), 4000);
+      } else {
+        toast(data.detail || 'Failed', 'error');
+      }
+    } catch (e) {
+      toast('API error', 'error');
+    }
   }
-
   // ── STREAM PAGE ──
   async function loadStreamCameras() {
     try {
