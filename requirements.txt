@@ -4,8 +4,5 @@ supabase
 python-dotenv
 opencv-python-headless
 numpy
-mediapipe
-tflite-runtime
-pymysql
 pillow
 python-multipart

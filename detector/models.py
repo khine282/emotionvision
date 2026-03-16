@@ -43,9 +43,12 @@ def load_models():
             logger.warning(f"⚠️ Model not found at {model_path}")
             models["emotion_model"] = None
 
+    except ImportError:
+        logger.warning("⚠️ TensorFlow not available - no emotion detection")
+        models["emotion_model"] = None
     except Exception as e:
         logger.error(f"Error loading emotion model: {e}")
-        models["emotion_model"] = None
+        models["emotion_model"] = None 
 
     # Load face detector (MediaPipe)
     try:
